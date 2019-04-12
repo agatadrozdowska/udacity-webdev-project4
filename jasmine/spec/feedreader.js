@@ -13,7 +13,7 @@ $(function() {
                 expect(feed['url']).toBeDefined();
                 expect(feed['url'].length).not.toBe(0);
             })
-        })
+        });
 
         //checking if every feed has name
         it('should have name', function() {
@@ -31,17 +31,17 @@ $(function() {
         //checking if menu is hidden by default
         it('should be hidden by default', function() {
             expect(body.hasClass('menu-hidden')).toBe(true);
-        })
+        });
 
         //checking if menu toggles class after click
         it('should change visibility', function() {
             const menu = $('.menu-icon-link');
             menu.click();
-            expect(body.attr('class')).toEqual('');
+            expect(body.hasClass('menu-hidden')).toBe(false);
             menu.click();
-            expect(body.attr('class')).toEqual('menu-hidden');
+            expect(body.hasClass('menu-hidden')).toBe(true);
         })
-    })
+    });
 
     //test suite validating initial entries
     describe('Initial Entries', function() {
@@ -50,31 +50,34 @@ $(function() {
             loadFeed(0, function() {
                 done();
             })
-        })
+        });
 
         //testing if feeds actually exist
         it('should load feeds', function(done) {
-            expect($('.entry').length).not.toBe(0);
+            expect($('.feed .entry').length).not.toBe(0);
             done();
         })
-    })
+    });
 
     //test suite checking if loading feeds works
     describe('New Feed Selection', function() {
-        //saving the initial state before loading new feeds
-        const initialFeedContent = $('.entry').length;
-        let currentFeedContent;
+        // Saving the initial state before loading new feeds
+        let firstFeedContent;
+        let secondFeedContent;
 
         beforeEach(function(done) {
             loadFeed(0, function() {
-                currentFeedContent = $('.entry').length;
-                done();
+                firstFeedContent = document.querySelector('.feed').innerHTML;
+                loadFeed(1, function() {
+                    secondFeedContent = document.querySelector('.feed').innerHTML;
+                    done();
+                })
             })
-        })
+        });
 
         //checking if state changed after calling loadFeed function
         it('should add new feed', function(done) {
-            expect(initialFeedContent).not.toEqual(currentFeedContent);
+            expect(firstFeedContent).not.toEqual(secondFeedContent);
             done();
         })
     })
